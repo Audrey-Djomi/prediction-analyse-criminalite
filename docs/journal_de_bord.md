@@ -24,7 +24,7 @@ Démarrer un projet d'analyse de données centré sur un SGBDR, à partir de don
 - Les données sont disponibles à l'échelle départementale (101 départements).
 - Aucune valeur manquante n'a été détectée lors de la première vérification.
 - Aucun doublon n'a été détecté lors de la première vérification.
-- Vérifier la structure du fichier et la signification des colonnes
+- Vérifier la structure du fichier et la signification des colonnes.
 
 ### Définir les questions métiers auxquelles l'analyse SQL devra répondre
 
@@ -34,6 +34,12 @@ Démarrer un projet d'analyse de données centré sur un SGBDR, à partir de don
 4. Quels départements connaissent la plus forte évolution entre 2023 et 2025 ?
 5. Quels sont les trois indicateurs les plus fréquents dans chaque région ?
 
+## Jour 2: Préparation et import des données dans MySQL
+- Création de la base de données criminalite_db dans MySQL afin de disposer d'un environnement structuré pour le stockage et l'analyse des données.
+- Création de la table criminalite avec une structure adaptée aux données du fichier CSV.
+- Les types de données ont notamment été définis pour distinguer les informations textuelles, les années, les nombres de faits et les taux.
+- Une configuration de MySQL a été nécessaire pour autoriser l'import local des fichiers avec local_infile
+- Importation des données depuis notre CSV local. Nous avons eu le résultat : 18 180 lignes importées, 0 ligne supprimée, 0 ligne ignorée et 0 avertissement.
+
 ### Prochaine étape
-Vérifier la structure du fichier et la signification des colonnes avant de
-concevoir le modèle de données SQL Server.
+Poursuite de l'exploration et des contrôles de qualité des données dans MySQL, avant de réaliser les analyses permettant de répondre aux différentes questions métiers définies pour le projet.
