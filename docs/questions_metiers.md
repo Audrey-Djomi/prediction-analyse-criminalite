@@ -33,7 +33,7 @@ docs/images/q1_types_infractions.png
 
 Pour répondre à cette question, nous analyserons pour chaque indicateur car il ne mesure pas tous les mêmes unités:
 
-- Homicides - l'unité : victime
+- Nous nous concrerons sur l'indicateur Homicides - l'unité : victime
 
 #### Question métier 2A: Quelles sont les dix combinaisons département/année ayant enregistré le plus grand nombre d’homicides ?
 
@@ -127,9 +127,77 @@ docs/images/q2c_top_homicides_taux_moyen_departement.png
 
     Objectif : comprendre la tendance temporelle (analyser l évolution).
 
+```sql
+
+SELECT annee,
+		SUM(nombre) as total_victimes
+FROM criminalite
+WHERE indicateur = 'Homicides'
+	AND unite_de_compte = 'Victime'
+GROUP BY annee
+ORDER BY annee DESC
+LIMIT 10 ;
+
+Entre 2016 et 2025, le nombre de victimes d’homicides enregistrées évolue de manière irrégulière :
+
+2016 : 911 victimes
+2017 : 835 victimes, soit une baisse de 76 victimes
+2018 : 845 victimes, soit une hausse de 10 victimes
+2019 : 878 victimes, soit une hausse de 33 victimes
+2020 : 788 victimes, soit une baisse de 90 victimes
+2021 : 840 victimes, soit une hausse de 52 victimes
+2022 : 958 victimes, soit une hausse de 118 victimes
+2023 : 996 victimes, soit une hausse de 38 victimes
+2024 : 976 victimes, soit une baisse de 20 victimes
+2025 : 975 victimes, soit une légère baisse de 1 victime
+
+La valeur la plus faible est enregistrée en 2020 avec 788 victimes, tandis que la valeur la plus élevée est observée en 2023 avec 996 victimes.
+Une hausse importante entre 2021 et 2023, une légère baisse est observée en 2024 et 2025.
 
 
+```text
+docs/images/q3_evolution_infraction_2016_2025.png
 
+#### Question métier 3A : mesurer l’évolution entre deux années
+
+```sql
+WITH evolution AS (
+    SELECT
+        annee,
+        SUM(nombre) AS total_victimes
+    FROM criminalite
+    WHERE indicateur = 'Homicides'
+      AND unite_de_compte = 'Victime'
+    GROUP BY annee
+)
+
+SELECT
+    annee,
+    total_victimes,
+    LAG(total_victimes) OVER (ORDER BY annee) AS victimes_annee_precedente,
+    total_victimes
+        - LAG(total_victimes) OVER (ORDER BY annee)
+        AS evolution_absolue,
+    ROUND(
+        (
+            total_victimes
+            - LAG(total_victimes) OVER (ORDER BY annee)
+        )
+        / NULLIF(LAG(total_victimes) OVER (ORDER BY annee), 0)
+        * 100,
+        2
+    ) AS evolution_pourcentage
+FROM evolution
+ORDER BY annee;
+
+On observe les principales variations annuelles :
+
+- La plus forte baisse est observée entre 2019 et 2020, avec 90 victimes en moins.
+- La plus forte hausse est observée entre 2021 et 2022, avec 118 victimes supplémentaires.
+- Entre 2024 et 2025, le nombre de victimes diminue très légèrement, avec une victime en moins.
+
+```text
+docs/images/q3a_evolution_entre_deux_annee.png
 
 ### Question 4 - Quels départements connaissent la plus forte évolution entre 2023 et 2025 par exemple? ou Quels départements connaissent la plus forte progression ?
     

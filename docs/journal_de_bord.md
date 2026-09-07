@@ -39,9 +39,13 @@ Démarrer un projet d'analyse de données centré sur un SGBDR, à partir de don
 - Une configuration de MySQL a été nécessaire pour autoriser l'import local des fichiers avec local_infile
 - Importation des données depuis notre CSV local. Nous avons eu le résultat : 18 180 lignes importées, 0 ligne supprimée, 0 ligne ignorée et 0 avertissement.
 
-# Jour 3
+# Jour 3 : Analyse de l’évolution des homicides
 - La colonne taux_pour_mille a bien été pris en compte et les valeurs décimales ont été converties avec un point comme séparateur décimal, conformément au format attendu par MySQL.
 - quelques requêtes de contrôles effectués pour vérifier le nombre de lignes importées et la présence de valeurs manquantes.
-- réponses aux 
+- Analyse des données à l’aide de requêtes SQL,
+- Etude les homicides afin de répondre aux question métiers voir le fichier sql/04_requetes_metiers.sql
+- Synthèse des résultats et leur interprétation sont dans le fichier docs/questions_metiers.md.
+- Analyse de l’évolution des homicides entre 2016 et 2025
+
 ### Prochaine étape
 Poursuite de l'exploration et des contrôles de qualité des données dans MySQL, avant de réaliser les analyses permettant de répondre aux différentes questions métiers définies pour le projet.
