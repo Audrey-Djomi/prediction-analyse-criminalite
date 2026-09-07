@@ -1,8 +1,6 @@
-# Journal de bord — Projet Analyse de la criminalité
+# Jour 1: 03/09/2026 — Initialisation du projet
 
-## Jour 1: 03/09/2026 — Initialisation du projet
-
-### Objectif
+## Objectif
 Démarrer un projet d'analyse de données centré sur un SGBDR, à partir de données publiques sur la délinquance enregistrée en France.
 
 ### Travaux réalisés
@@ -16,7 +14,7 @@ Démarrer un projet d'analyse de données centré sur un SGBDR, à partir de don
 - Téléchargement d'un jeu de données départementales depuis data.gouv.fr.
 - Première exploration du fichier : dimensions, informations générales, valeurs manquantes et doublons.
 
-### Premières observations
+## Premières observations
 - Télécharger la BD que nous utiliserons pour notre projet depuis le site officiel https://www.data.gouv.fr/datasets/bases-statistiques-communale-departementale-et-regionale-de-la-delinquance-enregistree-par-la-police-et-la-gendarmerie-nationales
 
 - Le fichier contient 18 180 lignes et 11 colonnes.
@@ -26,7 +24,7 @@ Démarrer un projet d'analyse de données centré sur un SGBDR, à partir de don
 - Aucun doublon n'a été détecté lors de la première vérification.
 - Vérifier la structure du fichier et la signification des colonnes.
 
-### Définir les questions métiers auxquelles l'analyse SQL devra répondre
+## Définir les questions métiers auxquelles l'analyse SQL devra répondre
 
 1. Quels sont les différents types d'infractions présents dans le jeu de données ?
 2. Quels sont les départements qui enregistrent le plus de faits pour un indicateur donné ?
@@ -34,12 +32,16 @@ Démarrer un projet d'analyse de données centré sur un SGBDR, à partir de don
 4. Quels départements connaissent la plus forte évolution entre 2023 et 2025 ?
 5. Quels sont les trois indicateurs les plus fréquents dans chaque région ?
 
-## Jour 2: Préparation et import des données dans MySQL
+# Jour 2: Préparation et import des données dans MySQL
 - Création de la base de données criminalite_db dans MySQL afin de disposer d'un environnement structuré pour le stockage et l'analyse des données.
 - Création de la table criminalite avec une structure adaptée aux données du fichier CSV.
 - Les types de données ont notamment été définis pour distinguer les informations textuelles, les années, les nombres de faits et les taux.
 - Une configuration de MySQL a été nécessaire pour autoriser l'import local des fichiers avec local_infile
 - Importation des données depuis notre CSV local. Nous avons eu le résultat : 18 180 lignes importées, 0 ligne supprimée, 0 ligne ignorée et 0 avertissement.
 
+# Jour 3
+- La colonne taux_pour_mille a bien été pris en compte et les valeurs décimales ont été converties avec un point comme séparateur décimal, conformément au format attendu par MySQL.
+- quelques requêtes de contrôles effectués pour vérifier le nombre de lignes importées et la présence de valeurs manquantes.
+- réponses aux 
 ### Prochaine étape
 Poursuite de l'exploration et des contrôles de qualité des données dans MySQL, avant de réaliser les analyses permettant de répondre aux différentes questions métiers définies pour le projet.
