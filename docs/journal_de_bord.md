@@ -47,5 +47,50 @@ Démarrer un projet d'analyse de données centré sur un SGBDR, à partir de don
 - Synthèse des résultats et leur interprétation sont dans le fichier docs/questions_metiers.md.
 - Analyse de l’évolution des homicides entre 2016 et 2025
 
+# Jour 4: Suite Analyses
+- Analyse de l’évolution des homicides entre 2023 et 2025
+
+Les plus fortes hausses sont enregistrées dans :
+
+- le Rhône et la Martinique, avec 14 victimes supplémentaires chacun ;
+- l’Ille-et-Vilaine, avec 11 victimes supplémentaires ;
+- Paris, avec 10 victimes supplémentaires ;
+- la Meurthe-et-Moselle, avec 9 victimes supplémentaires.
+
+À l’inverse, les plus fortes baisses concernent :
+
+- les Bouches-du-Rhône, avec 28 victimes de moins ;
+- la Guyane, avec 19 victimes de moins ;
+- le Pas-de-Calais et la Seine-Maritime, avec 11 victimes de moins chacun.
+
+Cette analyse montre que l’évolution nationale ne se traduit pas de manière uniforme dans les différents départements. Certains territoires connaissent une hausse, tandis que d’autres enregistrent une baisse importante.
+
+- Analyse de l’évolution des cambriolages de logement entre 2023 et 2025
+
+- requête pour vérifier l’unité de compte utilisée pour cet indicateur. Les cambriolages de logement sont exprimés en infractions.
+
+- Comparer le nombre d’infractions enregistrées en 2023 et en 2025 pour chaque département. La requête calcule également l’évolution absolue entre les deux années.
+
+Les résultats montrent des évolutions très contrastées.
+
+Les plus fortes hausses sont observées dans :
+
+- l’Ain, avec 782 cambriolages supplémentaires,
+- la Meurthe-et-Moselle, avec 686 infractions supplémentaires,
+- l’Isère, avec 608 infractions supplémentaires,
+- les Côtes-d’Armor, avec 606 infractions supplémentaires,
+- le Morbihan, avec 566 infractions supplémentaires.
+
+Les plus fortes baisses concernent :
+
+- Paris, avec 4 889 cambriolages de moins,
+- les Bouches-du-Rhône, avec 2 728 infractions de moins,
+- les Hauts-de-Seine, avec 1 944 infractions de moins,
+- la Seine-Saint-Denis, avec 1 054 infractions de moins,
+- la Gironde, avec 1 048 infractions de moins.
+
+Cette analyse montre que les évolutions peuvent être très différentes selon les départements. Cependant, la comparaison en nombre absolu doit être interprétée avec prudence, car les départements n’ont pas tous la même population.
+
+
 ### Prochaine étape
-Poursuite de l'exploration et des contrôles de qualité des données dans MySQL, avant de réaliser les analyses permettant de répondre aux différentes questions métiers définies pour le projet.
+- étudier les trois indicateurs les plus fréquents dans chaque région.

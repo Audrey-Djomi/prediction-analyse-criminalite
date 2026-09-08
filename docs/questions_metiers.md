@@ -199,10 +199,171 @@ On observe les principales variations annuelles :
 ```text
 docs/images/q3a_evolution_entre_deux_annee.png
 
-### Question 4 - Quels départements connaissent la plus forte évolution entre 2023 et 2025 par exemple? ou Quels départements connaissent la plus forte progression ?
+### Question 4 - Quels départements connaissent la plus forte évolution entre 2023 et 2025? ou Quels départements connaissent la plus forte progression ?
     
     Objectif : comparer deux périodes ou deux années
 
+Pour cette analyse, nous allons comparer les données de 2023 et de 2025, indicateur par indicateur.
+
+Comme les indicateurs n’ont pas tous la même unité de compte, 
+- nous allons commencer avec les homicides, que nous avons déjà étudiés ci-dessus.
+
+```sql
+    SELECT 
+	code_departement,
+    SUM(
+		CASE 
+			WHEN annee = 2023 THEN nombre
+            ELSE 0
+		END
+        ) AS victimes_2023,
+	SUM(
+		CASE
+			WHEN annee = 2025 THEN nombre
+            ELSE 0
+		END
+        ) AS victimes_2025,
+	SUM(
+		CASE
+			WHEN annee = 2025 THEN nombre
+            ELSE 0
+		END
+		)
+        -
+	SUM(
+		CASE
+			WHEN annee = 2023 THEN nombre
+            ELSE 0
+		END
+		) AS homicides_2023_2025
+FROM criminalite
+WHERE indicateur = 'Homicides'
+	AND unite_de_compte = 'Victime'
+    AND annee IN (2023,2025)
+GROUP BY code_departement 
+HAVING victimes_2023 IS NOT NULL
+	AND victimes_2025 IS NOT NULL
+ORDER BY homicides_2023_2025 DESC 
+LIMIT 10;
+
+Les départements ayant connu la plus forte hausse en nombre absolu sont donc :
+
+le Rhône (69) et la Martinique (972), avec 14 victimes supplémentaires ;
+l’Ille-et-Vilaine (35), avec 11 victimes supplémentaires ;
+Paris (75), avec 10 victimes supplémentaires.
+```text
+docs/images/q4a_homicide_2023_2025.png
+
+Les plus fortes diminutions sont les suivantes :
+
+```sql
+SELECT 
+	code_departement,
+    SUM(
+		CASE 
+			WHEN annee = 2023 THEN nombre
+            ELSE 0
+		END
+        ) AS victimes_2023,
+	SUM(
+		CASE
+			WHEN annee = 2025 THEN nombre
+            ELSE 0
+		END
+        ) AS victimes_2025,
+	SUM(
+		CASE
+			WHEN annee = 2025 THEN nombre
+            ELSE 0
+		END
+		)
+        -
+	SUM(
+		CASE
+			WHEN annee = 2023 THEN nombre
+            ELSE 0
+		END
+		) AS homicides_2023_2025
+FROM criminalite
+WHERE indicateur = 'Homicides'
+	AND unite_de_compte = 'Victime'
+    AND annee IN (2023,2025)
+GROUP BY code_departement 
+HAVING victimes_2023 IS NOT NULL
+	AND victimes_2025 IS NOT NULL
+ORDER BY homicides_2023_2025 ASC 
+LIMIT 10;
+
+La plus forte baisse entre 2023 et 2025 concerne donc :
+
+les Bouches-du-Rhône (13), avec 28 victimes de moins;
+la Guyane (973) avec 19 victimes de moins et suivi du Pas-de-Calais(62) et Seine-Maritime(76) avec 11 victimes de moins.
+
+Ces résultats montrent que l’évolution nationale observée précédemment ne se traduit pas de la même manière dans tous les territoires. Certains départements connaissent une hausse importante, tandis que d’autres enregistrent une baisse.
+
+Il faut toutefois rester prudent : cette comparaison porte sur des nombres absolus. Elle ne tient pas compte de la population de chaque département. 
+Une analyse complémentaire avec les taux pour mille permettrait de mieux comparer les territoires de tailles différentes.
+
+- Question métier 4B: Quels départements connaissent la plus forte évolution du nombre de cambriolages de logement entre 2023 et 2025 ?
+
+- Nous allons vérifier quel est l unite de compte de lindicateur 'cambriolages de logement'
+
+```sql
+
+SELECT DISTINCT indicateur, unite_de_compte
+FROM criminalite
+WHERE indicateur = 'cambriolages de logement';
+
+Puis 
+
+```sql
+
+SELECT code_departement,
+	SUM(
+    CASE
+		WHEN annee = 2023 THEN nombre
+        ELSE 0
+	END
+    ) as cambriolages_2023,
+    
+    SUM( 
+		CASE
+			WHEN annee = 2025 THEN nombre
+            ELSE 0
+		END
+            ) as cambriolages_2025,
+            
+	SUM(
+		CASE
+			WHEN annee = 2025 THEN nombre
+            ELSE 0
+		END
+            )
+	- 
+    SUM(
+		CASE
+			WHEN annee = 2023 THEN nombre
+            ELSE 0
+		END
+            ) as cambriolages_2023_2025
+            
+FROM criminalite
+WHERE indicateur = 'cambriolages de logement'
+	AND unite_de_compte = 'Infraction'
+    AND annee IN (2023,2025)
+GROUP BY code_departement
+ORDER BY cambriolages_2023_2025 DESC;
+
+Le département qui connaît la plus forte hausse est  l’Ain, avec 782 cambriolages supplémentaires entre 2023 et 2025.
+On peut aussi trouver cette hausse dans la Meurthe-et-Moselle(54) avec plus de 686 cambriolages, l’Isère(38) avec plus de 608 , les Côtes-d’Armor(22) avec plus de 606, le Morbihan(56) avec plus de 566 cambriolages.
+
+La plus forte baisse concerne Paris, avec 4 889 cambriolages de moins en 2025 par rapport à 2023.
+On trouve cette diminution dans les Bouches-du-Rhône(13) avec moins de 2 728, les Hauts-de-Seine(92) avec moins de 1 944, la Seine-Saint-Denis(93) avec moins de 1 054 , la Gironde(33) avec moins de 1 048 cambriolages.
+
+``` text
+docs/images/q4b_cambriolages_2023_2025.png
+
+Entre 2023 et 2025, les cambriolages de logement évoluent différemment selon les départements. L’Ain connaît la plus forte hausse, avec 782 infractions supplémentaires. Paris enregistre la plus forte baisse, avec 4 889 infractions de moins.
 
 ### Question 5 - Quels sont les trois indicateurs les plus fréquents dans chaque région ?
 
@@ -210,10 +371,10 @@ docs/images/q3a_evolution_entre_deux_annee.png
 
 Nos questions métiers nous permettrons de savoir quelles tables SQL devons-nous créer afin de les répondre ?
 
-## Limites de l'analyse
+### Limites de l analyse
 
 Les données correspondent aux faits enregistrés par les services de police
-et de gendarmerie. Elles ne représentent pas nécessairement l'ensemble des
+et de gendarmerie. Elles ne représentent pas nécessairement l ensemble des
 faits réellement commis.
 
 Les indicateurs peuvent utiliser des unités de compte différentes. Les

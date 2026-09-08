@@ -136,5 +136,129 @@ ORDER BY annee;
 soit une augmentation absolue de 64 victimes. 
 Le nombre de victimes reste toutefois fluctuant d’une année à l’autre.
 */
+-- Question métier 4 : Quels départements connaissent la plus forte évolution entre 2023 et 2025 ?
+-- Nous allons parcourir chaque indicateur et pour cela nous commencerons par les homicides entre 2023 et 2025
+-- Question métier 4A: Comparer les homicides entre 2023 et 2025
 
 
+SELECT 
+	code_departement,
+    SUM(
+		CASE 
+			WHEN annee = 2023 THEN nombre
+            ELSE 0
+		END
+        ) AS victimes_2023,
+	SUM(
+		CASE
+			WHEN annee = 2025 THEN nombre
+            ELSE 0
+		END
+        ) AS victimes_2025,
+	SUM(
+		CASE
+			WHEN annee = 2025 THEN nombre
+            ELSE 0
+		END
+		)
+        -
+	SUM(
+		CASE
+			WHEN annee = 2023 THEN nombre
+            ELSE 0
+		END
+		) AS homicides_2023_2025
+        
+FROM criminalite
+WHERE indicateur = 'Homicides'
+	AND unite_de_compte = 'Victime'
+    AND annee IN (2023,2025)
+GROUP BY code_departement 
+HAVING victimes_2023 IS NOT NULL
+	AND victimes_2025 IS NOT NULL
+ORDER BY homicides_2023_2025 DESC 
+LIMIT 10;
+
+-- Les plus fortes diminutions sont les suivantes :
+SELECT 
+	code_departement,
+    SUM(
+		CASE 
+			WHEN annee = 2023 THEN nombre
+            ELSE 0
+		END
+        ) AS victimes_2023,
+        
+	SUM(
+		CASE
+			WHEN annee = 2025 THEN nombre
+            ELSE 0
+		END
+        ) AS victimes_2025,
+        
+	SUM(
+		CASE
+			WHEN annee = 2025 THEN nombre
+            ELSE 0
+		END
+		)
+        -
+	SUM(
+		CASE
+			WHEN annee = 2023 THEN nombre
+            ELSE 0
+		END
+		) AS homicides_2023_2025
+        
+FROM criminalite
+WHERE indicateur = 'Homicides'
+	AND unite_de_compte = 'Victime'
+    AND annee IN (2023,2025)
+GROUP BY code_departement 
+HAVING victimes_2023 IS NOT NULL
+	AND victimes_2025 IS NOT NULL
+ORDER BY homicides_2023_2025 ASC 
+LIMIT 10; 
+
+-- Question métier 4B: Quels départements connaissent la plus forte évolution du nombre de cambriolages de logement entre 2023 et 2025 ?
+-- Nous allons vérifier quel est l'unite de compte de l'indicateur 'cambriolages de logement'
+
+SELECT DISTINCT indicateur, unite_de_compte
+FROM criminalite
+WHERE indicateur = 'cambriolages de logement';
+
+SELECT code_departement,
+	SUM(
+    CASE
+		WHEN annee = 2023 THEN nombre
+        ELSE 0
+	END
+    ) as cambriolages_2023,
+    
+    SUM( 
+		CASE
+			WHEN annee = 2025 THEN nombre
+            ELSE 0
+		END
+            ) as cambriolages_2025,
+            
+	SUM(
+		CASE
+			WHEN annee = 2025 THEN nombre
+            ELSE 0
+		END
+            )
+	- 
+    SUM(
+		CASE
+			WHEN annee = 2023 THEN nombre
+            ELSE 0
+		END
+            ) as cambriolages_2023_2025
+            
+FROM criminalite
+WHERE indicateur = 'cambriolages de logement'
+	AND unite_de_compte = 'Infraction'
+    AND annee IN (2023,2025)
+GROUP BY code_departement
+ORDER BY cambriolages_2023_2025 DESC;
