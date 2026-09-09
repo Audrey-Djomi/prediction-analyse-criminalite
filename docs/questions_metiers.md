@@ -306,7 +306,7 @@ Une analyse complémentaire avec les taux pour mille permettrait de mieux compar
 
 - Question métier 4B: Quels départements connaissent la plus forte évolution du nombre de cambriolages de logement entre 2023 et 2025 ?
 
-- Nous allons vérifier quel est l unite de compte de lindicateur 'cambriolages de logement'
+- Nous allons vérifier quel est l unite de compte de lindicateur cambriolages de logement
 
 ```sql
 
@@ -368,14 +368,93 @@ Entre 2023 et 2025, les cambriolages de logement évoluent différemment selon l
 ### Question 5 - Quels sont les trois indicateurs les plus fréquents dans chaque région ?
 
     Objectif : croiser les territoires et les indicateurs
+Certaines requêtes ont été réalisées avant, à voir dans le fichier `04_requetes_metiers`
 
-Nos questions métiers nous permettrons de savoir quelles tables SQL devons-nous créer afin de les répondre ?
+```sql
+    WITH classement AS (
+	SELECT code_region,
+        indicateur,
+        SUM(nombre) AS total_faits,
+        ROW_NUMBER() OVER (PARTITION BY code_region
+							ORDER BY SUM(nombre) DESC
+					) AS rang
+FROM criminalite
+GROUP BY code_region, indicateur
+)
 
-### Limites de l analyse
+SELECT code_region,
+		indicateur,
+        total_faits,
+        rang
+FROM classement
+WHERE rang <=3
+ORDER BY code_region, rang;
 
-Les données correspondent aux faits enregistrés par les services de police
-et de gendarmerie. Elles ne représentent pas nécessairement l ensemble des
-faits réellement commis.
+Rappelons nous que :
+cette requête additionne directement tous les indicateurs, ce qui peut donc mélanger des éléments différents. Par exemple, une victime ne représente pas nécessairement une infraction, et un véhicule ne représente pas une personne.
 
-Les indicateurs peuvent utiliser des unités de compte différentes. Les
-comparaisons devront donc tenir compte de cette distinction.
+Nous pouvons observer que les principalement que: 
+
+- Les destructions et dégradations volontaires arrivent en première position dans toutes les régions étudiées.
+- Les cambriolages de logement arrivent en deuxième position dans toutes les régions.
+- Les vols violents sans arme occupent généralement la troisième position.
+
+Les régions 11 (Île-de-France), 84(Auvergne-Rhône-Alpes), 93(Provence-Alpes-Côte d’Azur), 32(Hauts-de-France) et 44(Grand Est) présentent les volumes les plus élevés, ce qui peut s’expliquer notamment par leur population et leur nombre de départements.
+
+La région 94(Corse) présente des volumes beaucoup plus faibles.
+
+``` text
+docs/images/q5_top3_indicateurs_regions.png
+
+Si nous voulons filtrer quand l'unité de compte est Infraction, nous ferions:
+```sql
+WITH classement AS (
+    SELECT
+        Code_region,
+        indicateur,
+        SUM(nombre) AS total_faits,
+        ROW_NUMBER() OVER (
+            PARTITION BY Code_region
+            ORDER BY SUM(nombre) DESC
+        ) AS rang
+    FROM criminalite
+    WHERE unite_de_compte = 'Infraction'
+    GROUP BY
+        Code_region,
+        indicateur
+)
+SELECT
+    Code_region,
+    indicateur,
+    total_faits,
+    rang
+FROM classement
+WHERE rang <= 3
+ORDER BY total_faits DESC, Code_region, rang;
+
+
+Les régions 11 (Île-de-France), 84(Auvergne-Rhône-Alpes), 32(Hauts-de-France),93(Provence-Alpes-Côte d’Azur), 84(Auvergne-Rhône-Alpes) présentent les volumes les plus élevés.
+
+En Île-de-France, les trois indicateurs les plus fréquents sont :
+Vols sans violence contre des personnes lorsque toutes les unités de compte sont incluses ;
+Destructions et dégradations volontaires ;
+Escroqueries et fraudes aux moyens de paiement.
+
+Cependant, lorsque nous limitons l’analyse aux lignes dont l’unité est Infraction, le classement devient :
+
+Destructions et dégradations volontaires : 1 102 495 infractions ;
+Cambriolages de logement : 444 585 infractions ;
+Vols violents sans arme : 311 017 infractions.
+
+Cette différence montre pourquoi il était important de contrôler l’unité de compte avant de comparer les indicateurs.
+
+La région Corse(94) présente les volumes d’infractions les plus faibles parmi les régions étudiées, ce qui peut notamment s’expliquer par une population moins importante que celle des grandes régions métropolitaines.
+
+``` text
+docs/images/question5_top_infractions_regions.png
+
+### Limites de l'analyse
+
+Les données correspondent aux faits enregistrés par les services de police et de gendarmerie. Elles ne représentent pas nécessairement l'ensemble des faits réellement commis.
+
+Les indicateurs utilisent des unités de compte différentes. Les comparaisons tiennent compte de cette distinction.

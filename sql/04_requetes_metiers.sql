@@ -262,3 +262,4 @@ WHERE indicateur = 'cambriolages de logement'
     AND annee IN (2023,2025)
 GROUP BY code_departement
 ORDER BY cambriolages_2023_2025 DESC;
+

@@ -91,6 +91,27 @@ Les plus fortes baisses concernent :
 
 Cette analyse montre que les évolutions peuvent être très différentes selon les départements. Cependant, la comparaison en nombre absolu doit être interprétée avec prudence, car les départements n’ont pas tous la même population.
 
+# Jour 5: Suite et fin Analyses
 
-### Prochaine étape
-- étudier les trois indicateurs les plus fréquents dans chaque région.
+- Identification des trois indicateurs les plus fréquents dans chaque région
+- Nous avons comparer les volumes d’infractions enregistrées selon les régions et d’identifier les indicateurs qui représentent les plus grands nombres de faits.
+
+- Avant, nous avons vérifier les unités de compte présentes dans le jeu de données.
+- Puis nous avons fait une analyse aux lignes dont l’unité de compte est `Infraction`.
+
+Nous avons utilisé une requête SQL reposant sur une CTE et la fonction de classement `ROW_NUMBER()`. Cette fonction permet de classer les indicateurs à l’intérieur de chaque région et de conserver uniquement les trois premiers.
+
+Les résultats montrent que les trois indicateurs les plus fréquents sont principalement :
+
+1. Destructions et dégradations volontaires ;
+2. Cambriolages de logement ;
+3. Vols violents sans arme.
+
+Les destructions et dégradations volontaires arrivent en première position dans toutes les régions étudiées. Les cambriolages de logement occupent généralement la deuxième position, tandis que les vols violents sans arme apparaissent le plus souvent en troisième position.
+
+Les volumes les plus importants sont observés dans les régions les plus peuplées, notamment l’Île-de-France, les Hauts-de-France, l’Auvergne-Rhône-Alpes et la Provence-Alpes-Côte d’Azur.
+
+Cette analyse doit toutefois être interprétée avec prudence, car les régions n’ont pas toutes la même population ni le même nombre de départements. Les résultats représentent des volumes absolus d’infractions enregistrées et non des taux rapportés à la population.
+
+L'ensemble de nos requêtes utilisées sont conservées dans le fichier `sql/04_requetes_metiers.sql`. La synthèse des résultats est ajoutée dans `docs/questions_metiers.md`.
+
