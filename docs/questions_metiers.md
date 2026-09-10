@@ -125,7 +125,7 @@ docs/images/q2c_top_homicides_taux_moyen_departement.png
 
 ### Question 3 - Comment évoluent les infractions entre 2016 et 2025 ?
 
-    Objectif : comprendre la tendance temporelle (analyser l évolution).
+    Objectif : comprendre la tendance temporelle (en analysant l'évolution).
 
 ```sql
 
@@ -451,7 +451,7 @@ Cette différence montre pourquoi il était important de contrôler l’unité d
 La région Corse(94) présente les volumes d’infractions les plus faibles parmi les régions étudiées, ce qui peut notamment s’expliquer par une population moins importante que celle des grandes régions métropolitaines.
 
 ``` text
-docs/images/question5_top_infractions_regions.png
+docs/images/q5_top_homicides_regions.png
 
 ### Limites de l'analyse
 

@@ -202,6 +202,7 @@ SELECT
             ELSE 0
 		END
 		)
+        
         -
 	SUM(
 		CASE
@@ -209,7 +210,6 @@ SELECT
             ELSE 0
 		END
 		) AS homicides_2023_2025
-        
 FROM criminalite
 WHERE indicateur = 'Homicides'
 	AND unite_de_compte = 'Victime'
@@ -248,7 +248,9 @@ SELECT code_departement,
             ELSE 0
 		END
             )
+            
 	- 
+    
     SUM(
 		CASE
 			WHEN annee = 2023 THEN nombre
@@ -262,4 +264,79 @@ WHERE indicateur = 'cambriolages de logement'
     AND annee IN (2023,2025)
 GROUP BY code_departement
 ORDER BY cambriolages_2023_2025 DESC;
+
+-- Question métier 5:  Quels sont les trois indicateurs les plus fréquents dans chaque région ?
+-- Vérifier kes régions présentes
+
+SELECT DISTINCT code_region
+FROM criminalite
+ORDER BY code_region;
+
+-- Vérifier le nombre de régions présentes dans la base
+
+SELECT COUNT(DISTINCT code_region) AS nombre_de_regions
+FROM criminalite;
+
+/* Calculer le nombre total de faits par région et par indicateur:
+Cette requête nous permet de voir, pour chaque région, 
+quels indicateurs représentent les volumes les plus importants. */
+
+SELECT code_region,
+        indicateur,
+        SUM(nombre) AS total_faits
+FROM criminalite
+GROUP BY code_region, indicateur
+ORDER BY code_region, total_faits DESC ;
+
+-- Nous allons classer les indicateurs dans chaque région
+
+WITH classement AS (
+	SELECT code_region,
+        indicateur,
+        SUM(nombre) AS total_faits,
+        ROW_NUMBER() OVER (PARTITION BY code_region
+							ORDER BY SUM(nombre) DESC
+					) AS rang
+FROM criminalite
+GROUP BY code_region, indicateur
+)
+
+SELECT code_region,
+		indicateur,
+        total_faits,
+        rang
+FROM classement
+WHERE rang <=3
+ORDER BY code_region, rang
+;
+
+-- Si nous voulons filtrer selon un indicateur bien précis, nous ferons par exemple pour unité de compte 'Infraction'
+
+WITH classement AS (
+	SELECT code_region,
+        indicateur,
+        SUM(nombre) AS total_faits,
+        ROW_NUMBER() OVER (PARTITION BY code_region
+							ORDER BY SUM(nombre) DESC
+					) AS rang
+FROM criminalite
+WHERE unite_de_compte = 'Infraction'
+GROUP BY code_region, indicateur
+)
+
+SELECT code_region,
+		indicateur,
+        total_faits,
+        rang
+FROM classement
+WHERE rang <=3
+ORDER BY code_region, rang
+;
+-- Un plus, le nombre de victimes suites aux violences physiques intrafamiliales par département français
+
+SELECT code_departement, indicateur, SUM(nombre) as total_faits
+FROM criminalite
+WHERE indicateur = 'Violences physiques intrafamiliales'
+GROUP BY code_departement
+ORDER BY total_faits DESC;
 

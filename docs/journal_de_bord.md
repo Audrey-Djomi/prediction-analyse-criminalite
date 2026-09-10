@@ -115,3 +115,7 @@ Cette analyse doit toutefois être interprétée avec prudence, car les régions
 
 L'ensemble de nos requêtes utilisées sont conservées dans le fichier `sql/04_requetes_metiers.sql`. La synthèse des résultats est ajoutée dans `docs/questions_metiers.md`.
 
+# Jour 6: mettre en forme les résultats et compléter le README.md
+ - Petite analyse complémentaire
+
+ # Jour 7: Vérification de l'ensemble de notre travail
